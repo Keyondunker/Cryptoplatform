@@ -7,5 +7,6 @@ namespace CryptoAnalyticsAPI.Models
         public decimal Price { get; set; }
         public decimal MarketCap { get; set; }
         public decimal Volume24h { get; set; }
+        public DateTime UpdatedAt { get; set; }   // Time of last update
     }
 }

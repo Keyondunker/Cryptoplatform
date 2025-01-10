@@ -1,58 +1,68 @@
+using CryptoAnalyticsAPI.Database;
+using CryptoAnalyticsAPI.Models;
+using CryptoAnalyticsAPI.Repositories;
 using CryptoAnalyticsAPI.Services;
-using CryptoAnalyticsAPI.Hubs;
-using Serilog;
+
+
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS policy
+// Add services to the container
+builder.Services.AddControllers();
+
+// Register SignalR services
+builder.Services.AddSignalR();
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
+// Add HttpClient for external API services
+builder.Services.AddHttpClient<CoinMarketCapService>();
+
+// Configure EF Core with SQLite
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register Repositories and Services
+builder.Services.AddScoped<HistoricalDataRepository>();
+builder.Services.AddScoped<HistoricalDataService>();
+builder.Services.AddScoped<CryptoDataRepository>();
+builder.Services.AddScoped<UserPreferencesRepository>();
+builder.Services.AddScoped<UserPreferencesService>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        builder => builder.WithOrigins("http://localhost:3000") // Allow React frontend
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials());
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Your frontend's URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
-
-// Add Serilog
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateLogger();
-builder.Logging.ClearProviders();
-builder.Logging.AddSerilog();
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-// Add services
-builder.Services.AddControllers();
-builder.Services.AddHttpClient<CoinMarketCapService>();
-builder.Services.AddSignalR();
-builder.Services.AddSingleton<CoinMarketCapService>();
 var app = builder.Build();
 
-
-// Use CORS policy
-app.UseCors("AllowReactApp");
-// Map routes
-app.MapControllers();
-app.MapHub<CryptoDataHub>("/cryptoDataHub");
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    // Enable Swagger in Development
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CryptoAnalyticsAPI v1");
+        c.RoutePrefix = string.Empty; // Serve Swagger UI at the root (http://localhost:5000)
+    });
 }
 
-app.UseRouting();
-
+app.UseCors();
+// Add Middleware
 app.UseAuthorization();
 
-app.MapStaticAssets();
+// Map Controllers
+app.MapControllers();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
-
+// Map SignalR Hubs
+app.MapHub<CryptoAnalyticsAPI.Hubs.CryptoDataHub>("/cryptoDataHub");
+// Run the application
 app.Run();

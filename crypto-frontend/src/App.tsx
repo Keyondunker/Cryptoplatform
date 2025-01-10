@@ -1,10 +1,10 @@
 import React from "react";
-import CryptoTable from "./components/CryptoTable";
+import Dashboard from "./pages/Dashboard";
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <CryptoTable />
+    <div>
+      <Dashboard />
     </div>
   );
 };

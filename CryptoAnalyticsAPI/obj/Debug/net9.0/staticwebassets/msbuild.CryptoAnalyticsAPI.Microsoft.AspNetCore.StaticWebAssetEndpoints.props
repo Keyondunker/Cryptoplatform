@@ -4,13 +4,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\CryptoAnalyticsAPI.k6ui58xjik.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-tIG7VK8GmouXUnmot5CMPkQ6s/mpZmvWqGh0iaDso5k="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1136"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022tIG7VK8GmouXUnmot5CMPkQ6s/mpZmvWqGh0iaDso5k=\u0022"},{"Name":"Last-Modified","Value":"Wed, 08 Jan 2025 18:32:06 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1136"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022tIG7VK8GmouXUnmot5CMPkQ6s/mpZmvWqGh0iaDso5k=\u0022"},{"Name":"Last-Modified","Value":"Thu, 09 Jan 2025 12:51:52 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/CryptoAnalyticsAPI/CryptoAnalyticsAPI.k6ui58xjik.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\CryptoAnalyticsAPI.k6ui58xjik.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"k6ui58xjik"},{"Name":"integrity","Value":"sha256-tIG7VK8GmouXUnmot5CMPkQ6s/mpZmvWqGh0iaDso5k="},{"Name":"label","Value":"_content/CryptoAnalyticsAPI/CryptoAnalyticsAPI.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1136"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022tIG7VK8GmouXUnmot5CMPkQ6s/mpZmvWqGh0iaDso5k=\u0022"},{"Name":"Last-Modified","Value":"Wed, 08 Jan 2025 18:32:06 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1136"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022tIG7VK8GmouXUnmot5CMPkQ6s/mpZmvWqGh0iaDso5k=\u0022"},{"Name":"Last-Modified","Value":"Thu, 09 Jan 2025 12:51:52 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/CryptoAnalyticsAPI/css/site.b9sayid5wm.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\site.css'))</AssetFile>
