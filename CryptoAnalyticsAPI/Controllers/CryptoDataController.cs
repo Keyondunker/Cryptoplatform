@@ -29,19 +29,20 @@ namespace CryptoAnalyticsAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCryptoData(int page = 1, int limit = 20, string sort = "name", string filter = "")
+        public async Task<IActionResult> GetCryptoData(int page = 1, int limit = 250, string sort = "name", string filter = "")
         {
             var cryptoData = await _cryptoService.GetLatestCryptoDataAsync();
 
             // Apply filtering
-            if (!string.IsNullOrEmpty(filter)){
+            if (!string.IsNullOrEmpty(filter))
+            {
                 cryptoData = FilteringHelper.FilterCryptoData(cryptoData, filter);
             }
-            
-            //Applying Sorting
+
+            // Apply sorting
             cryptoData = SortingHelper.SortCryptoData(cryptoData, sort);
 
-            //Apply pagination
+            // Apply pagination
             var pagedData = PaginationHelper.Paginate(cryptoData, page, limit);
 
             // Broadcast data to all SignalR clients
@@ -49,37 +50,44 @@ namespace CryptoAnalyticsAPI.Controllers
 
             return Ok(pagedData);
         }
-        
-        // GET /api/cryptodata/history?symbol=BTC
+
+        // GET /api/cryptodata/history?symbol=BTC&name=Bitcoin
         [HttpGet("history")]
-        public IActionResult GetHistoricalData(string symbol)
+        public async Task<IActionResult> GetHistoricalData(string symbol, int days = 30)
         {
             if (string.IsNullOrEmpty(symbol))
             {
                 return BadRequest("Symbol is required.");
             }
 
-            // Retrieve historical data for the given symbol
-            var historicalData = _historicalDataService.GetHistoricalData(symbol);
+            // Fetch historical data from the database
+            var historicalData = await _historicalDataService.GetHistoricalDataAsync(symbol);
 
-            if (historicalData == null || !historicalData.Any())
+            if (historicalData == null || !historicalData.Any() || historicalData.Count < days)
             {
-                return NotFound($"No historical data found for the symbol: {symbol}");
+                var updatedData = await _historicalDataService.GetHistoricalDataAsync(symbol, days);
+                await _historicalDataService.SaveHistoricalDataAsync(symbol, updatedData);
+                // If no data is found in the database, fetch from CoinGecko and save it
+                historicalData = updatedData;
             }
-             // Prepare data for chart rendering (sorted by date)
+
+            // Prepare data for chart rendering (sorted by date)
             var formattedData = historicalData
                 .OrderBy(data => data.Date) // Ensure chronological order
                 .Select(data => new
                 {
                     Date = data.Date.ToString("yyyy-MM-dd"), // Format date as string
-                    Price = data.Price
+                    Price = data.Price,
+                    MarketCap = data.MarketCap,
+                    Volume24h = data.Volume24h
                 });
+
             return Ok(formattedData);
         }
-        
+
         // POST /api/cryptodata/history/save
         [HttpPost("history/save")]
-        public IActionResult SaveHistoricalData([FromBody] List<CryptoHistoryData> historicalData)
+        public async Task<IActionResult> SaveHistoricalData([FromBody] List<CryptoHistoryData> historicalData)
         {
             if (historicalData == null || !historicalData.Any())
             {
@@ -87,11 +95,11 @@ namespace CryptoAnalyticsAPI.Controllers
             }
 
             // Save historical data
-            _historicalDataService.SaveHistoricalData(historicalData.First().Symbol, historicalData);
+            await _historicalDataService.SaveHistoricalDataAsync(historicalData.First().Symbol, historicalData);
 
             return Ok("Historical data saved successfully.");
         }
-    
+
         // POST /api/cryptodata/cache
         [HttpPost("cache")]
         public IActionResult SaveCryptoData([FromBody] List<CryptoData> cryptoData)

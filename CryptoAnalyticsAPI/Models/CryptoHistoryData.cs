@@ -9,9 +9,6 @@ namespace CryptoAnalyticsAPI.Models
         public decimal Price { get; set; }          // Price in USD
         public decimal MarketCap { get; set; }      // Market cap in USD
         public decimal Volume24h { get; set; }      // 24-hour volume in USD
-        public double PercentChange24h { get; set; }  // Percentage change in price over the last 24 hours
-
-        public double PercentChange7d { get; set; }   // Percentage change in price over the last 7 days
 
     }
 }

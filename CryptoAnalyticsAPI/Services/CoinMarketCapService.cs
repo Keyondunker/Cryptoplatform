@@ -11,60 +11,48 @@ namespace CryptoAnalyticsAPI.Services
     public class CoinMarketCapService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
 
-        // Constructor: Inject HttpClient and IConfiguration
-        public CoinMarketCapService(HttpClient httpClient, IConfiguration configuration)
+        // Constructor: Inject HttpClient
+        public CoinMarketCapService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _apiKey = configuration["CoinMarketCap:ApiKey"];
-
-            if (string.IsNullOrEmpty(_apiKey))
-            {
-                throw new ArgumentNullException(nameof(_apiKey), "API key for CoinMarketCap is missing. Please check your configuration.");
-            }
         }
 
         // Fetch Latest Cryptocurrency Data
         public async Task<List<CryptoData>> GetLatestCryptoDataAsync()
         {
-            var url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+            var url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd";
             var cryptoList = new List<CryptoData>();
 
             try
             {
-                // Add the API Key to request headers
-                _httpClient.DefaultRequestHeaders.Clear(); // Clear any existing headers
-                _httpClient.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", _apiKey);
+                 // Add the User-Agent header to the request
+                _httpClient.DefaultRequestHeaders.Clear();
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "CryptoAnalyticsAPI/1.0");
 
                 // Make the HTTP GET request
                 var response = await _httpClient.GetAsync(url);
-
-                // Check for Unauthorized status (401)
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    throw new Exception("Unauthorized: Invalid API key. Please check your CoinMarketCap API key.");
-                }
 
                 // Ensure the response was successful
                 response.EnsureSuccessStatusCode();
 
                 // Read and parse the response JSON
                 var content = await response.Content.ReadAsStringAsync();
-                var json = JObject.Parse(content);
+                var json = JArray.Parse(content);
 
                 // Extract and parse the cryptocurrency data
-                foreach (var item in json["data"])
+                foreach (var item in json)
                 {
                     try
                     {
                         cryptoList.Add(new CryptoData
                         {
-                            Symbol = item["symbol"].ToString(),
+                            Symbol = item["symbol"].ToString().ToUpper(),
                             Name = item["name"].ToString(),
-                            Price = Decimal.Parse(item["quote"]["USD"]["price"].ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture),
-                            MarketCap = Decimal.Parse(item["quote"]["USD"]["market_cap"].ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture),
-                            Volume24h = Decimal.Parse(item["quote"]["USD"]["volume_24h"].ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture)
+                            Price = Decimal.Parse(item["current_price"].ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture),
+                            MarketCap = Decimal.Parse(item["market_cap"].ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture),
+                            Volume24h = Decimal.Parse(item["total_volume"].ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture),
+                            UpdatedAt = DateTime.Parse(item["last_updated"].ToString())
                         });
                     }
                     catch (Exception ex)
@@ -77,8 +65,8 @@ namespace CryptoAnalyticsAPI.Services
             catch (HttpRequestException ex)
             {
                 // Log HTTP request errors
-                Console.WriteLine($"Error fetching data from CoinMarketCap: {ex.Message}");
-                throw new Exception("Failed to fetch cryptocurrency data. Please check your network or API key.");
+                Console.WriteLine($"Error fetching data from CoinGecko: {ex.Message}");
+                throw new Exception("Failed to fetch cryptocurrency data. Please check your network.");
             }
             catch (Exception ex)
             {
@@ -91,4 +79,3 @@ namespace CryptoAnalyticsAPI.Services
         }
     }
 }
-

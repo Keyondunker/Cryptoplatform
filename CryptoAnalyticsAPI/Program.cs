@@ -24,6 +24,8 @@ builder.Services.AddHttpClient<CoinMarketCapService>();
 // Configure EF Core with SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<CryptoDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register Repositories and Services
 builder.Services.AddScoped<HistoricalDataRepository>();
