@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<HttpClient>();
+//Here, the DI container registers a single HttpClient instance as a singleton.
+
+
 // Add services to the container
 builder.Services.AddControllers();
 
@@ -33,6 +37,7 @@ builder.Services.AddScoped<HistoricalDataService>();
 builder.Services.AddScoped<CryptoDataRepository>();
 builder.Services.AddScoped<UserPreferencesRepository>();
 builder.Services.AddScoped<UserPreferencesService>();
+builder.Services.AddScoped<PredictionService>();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>

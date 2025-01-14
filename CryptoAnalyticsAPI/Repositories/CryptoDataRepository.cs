@@ -13,13 +13,13 @@ namespace CryptoAnalyticsAPI.Repositories
         {
             _context = context;
         }
-
+        //update
         public void SaveCryptoData(List<CryptoData> cryptoData)
         {
             _context.CryptoData.AddRange(cryptoData);
             _context.SaveChanges();
         }
-
+        //read
         public List<CryptoData> GetCryptoData()
         {
             return _context.CryptoData.ToList();

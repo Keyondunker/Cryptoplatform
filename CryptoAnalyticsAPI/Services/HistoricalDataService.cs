@@ -33,7 +33,7 @@ namespace CryptoAnalyticsAPI.Services
         /// <param name="days">Number of days of historical data to fetch.</param>
         /// <returns>List of CryptoHistoryData representing the historical data.</returns>
         /// 
-
+        
         private async Task<string> FetchDataWithRetryAsync(string url, int maxRetries = 3)
         {
             for (int attempt = 1; attempt <= maxRetries; attempt++)
@@ -83,13 +83,80 @@ namespace CryptoAnalyticsAPI.Services
                 {
                     throw new Exception("No historical data returned from CoinGecko API.");
                 }
-                Console.WriteLine("Success! JT");
                 // Convert CoinGecko data to CryptoHistoryData
                 for (int i = 0; i < json.Prices.Count; i++)
                 {
                     historicalData.Add(new CryptoHistoryData
                     {
                         Symbol = symbol.ToUpper(),
+                        Date = DateTimeOffset.FromUnixTimeMilliseconds((long)json.Prices[i][0]).UtcDateTime,
+                        Price = (decimal)json.Prices[i][1],
+                        MarketCap = i < json.MarketCaps.Count ? (decimal)json.MarketCaps[i][1] : 0,
+                        Volume24h = i < json.TotalVolumes.Count ? (decimal)json.TotalVolumes[i][1] : 0
+                    });
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Error fetching historical data from CoinGecko: {ex.Message}");
+                throw new Exception("Failed to fetch historical data. Please check your network.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                throw;
+            }
+
+            return historicalData;
+        }
+
+        public async Task<List<CryptoHistoryData>> GetHistoricalDataAsync(string symbol, DateTime startDate, DateTime endDate)
+        {
+            int days = (DateTime.UtcNow - startDate).Days;
+            return await GetHistoricalDataAsync(symbol, days);
+        }
+        private List<CryptoHistoryData> AggregateDailyData(List<CryptoHistoryData> data)
+        {
+            return data
+            .GroupBy(d => d.Date.Date)
+            .Select(g => new CryptoHistoryData
+            {
+                Date = g.Key,
+                Symbol = g.First().Symbol,
+                Price = g.Average(d => d.Price),
+                MarketCap = g.Average(d => d.MarketCap),
+                Volume24h = g.Sum(d => d.Volume24h)
+            }).ToList();
+        }
+        public async Task<List<CryptoHistoryData>> GetHistoricalDatabyName(string _Name, int days = 30)
+        {
+            var mappedId = _Name;
+            var url = $"https://api.coingecko.com/api/v3/coins/{mappedId}/market_chart?vs_currency=usd&days={days}";
+            var historicalData = new List<CryptoHistoryData>();
+
+            try
+            {
+                // Add the User-Agent header to the request
+                _httpClient.DefaultRequestHeaders.Clear();
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "CryptoAnalyticsAPI/1.0");
+                // Parse the response JSON
+                var content = await FetchDataWithRetryAsync(url);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var json = JsonSerializer.Deserialize<CoinGeckoHistoricalData>(content, options); 
+                if (json == null || json.Prices == null)
+                {
+                    throw new Exception("No historical data returned from CoinGecko API.");
+                }
+                // Convert CoinGecko data to CryptoHistoryData
+                for (int i = 0; i < json.Prices.Count; i++)
+                {
+                    historicalData.Add(new CryptoHistoryData
+                    {
+                        Name = _Name.ToUpper(),
                         Date = DateTimeOffset.FromUnixTimeMilliseconds((long)json.Prices[i][0]).UtcDateTime,
                         Price = (decimal)json.Prices[i][1],
                         MarketCap = i < json.MarketCaps.Count ? (decimal)json.MarketCaps[i][1] : 0,
@@ -161,6 +228,13 @@ namespace CryptoAnalyticsAPI.Services
             }
         }
 
+        public async Task<List<CryptoHistoryData>> FetchHistoricalDataForPythonAsync(string _Name, int days)
+        {
+            var data = await GetHistoricalDatabyName(_Name, days);
+            return data.OrderByDescending(d => d.Date).Take(days).ToList();
+        }
+
+
         /// <summary>
         /// Map cryptocurrency symbol to CoinGecko ID.
         /// </summary>
@@ -193,9 +267,6 @@ namespace CryptoAnalyticsAPI.Services
                     Console.WriteLine($"No coin found for symbol: {symbol}");
                     return null;
                 }
-                // Log found coins
-                Console.WriteLine($"Coins matched for {symbol}: {string.Join(", ", matchingCoins.Select(c => $"{c.Symbol}:{c.Id}"))}");
-
                 return matchingCoins.FirstOrDefault()?.Id;
             }
             catch (Exception ex)

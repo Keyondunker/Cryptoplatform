@@ -1,0 +1,163 @@
+
+
+A design pattern is a reusable solution to a design problem that can be applied to various disciplines, including software engineering
+
+
+1. Repository Pattern 
+
+
+Explanation
+The Repository pattern abstracts the data source and provides a simple, consistent interface to access and manipulate data
+within the data source. 
+It typically includes methods for common data operations such as Create, Read, Update, and Delete (CRUD).
+
+
+e.x : CryptoDataRepository
+
+Purpose:
+-Centralizes data access logic, separating it from business logic.
+-Manages database operations such as saving, retrieving, and updating CryptoData and CryptoHistoryData.
+
+
+2.Service Layer Pattern
+
+Explanation
+Service Layer Pattern refers to a dedicated layer in your application architecture where the core business logic resides,
+acting as a mediator between the presentation layer (controllers) and the data access layer (repositories),
+allowing for cleaner separation of concerns and enhanced maintainability 
+by encapsulating complex business rules and operations within the service layer itself. 
+
+e.x : HistoricalDataService
+
+Purpose:
+-Encapsulates the business logic and provides an interface for controllers.
+-Coordinates API calls (e.g., to CoinGecko) and database operations.
+
+//differnce : repositories with simple CRUD methods, and services with more business-specific methods.
+
+3.Dependency Injection Pattern
+
+Explanation
+a design pattern where a class receives its dependencies from an external source instead of creating them internally
+
+e.x : Injecting services like CoinMarketCapService, HistoricalDataService, 
+      CryptoDataRepository, and IHubContext into controllers.
+
+Dependency Injection allows an object (like a controller) to receive its dependencies from an external source,
+rather than creating them internally.
+For example,instead of a controller creating its own instance of CoinMarketCapService,
+the DI container provides the instance.
+
+
+
+Purpose: Decouples components by allowing dependencies to be provided by the framework.
+
+Benefits:
+-Simplifies testing by enabling dependency replacement with mocks.
+-Reduces tight coupling between components.
+
+4.Singleton Pattern
+
+Explanation
+The Singleton pattern ensures that a class has only one instance and provides a global point of access
+to that instance throughout the application.
+This is useful for scenarios where a single instance is required to control actions or centralize configuration settings.
+
+e.x:Services like HttpClient configured in Program.cs using AddHttpClient.
+
+
+-the DI container registers a single HttpClient instance as a singleton.
+// through : builder.Services.AddSingleton<HttpClient>();
+-Injection into a Service
+The HttpClient instance is injected into the CoinMarketCapService through the constructor.
+This ensures the same HttpClient instance is reused every time the service is called.
+
+
+When the application starts, the DI container creates one instance of HttpClient and stores it in memory.
+Whenever a service (e.g., CoinMarketCapService) or controller requests an HttpClient, the same instance is provided.
+This ensures consistent behavior and efficient resource usage.
+
+
+5.Observer Pattern
+
+Explanation
+
+The observer design pattern enables a subscriber to register with and receive notifications from a provider.
+It's suitable for any scenario that requires push-based(a server-run scheme) notification. 
+
+e.x : SignalR (IHubContext<CryptoDataHub>) in CryptoDataController.
+
+Purpose:
+Notifies(/ informs) clients (e.g., frontend connected via SignalR) of changes in real-time.
+
+Benefits:
+Enables real-time updates to clients when data is fetched or changed.
+
+6.Builder Pattern
+
+Explanation
+The Builder pattern separates the construction of a complex object from its representation,
+ allowing the same construction process to create different types of objects.
+It is useful when an object needs various configurations to be created.
+
+// blog study
+
+e.x :HubConnectionBuilder in SignalR connection setup (frontend side).  (route ; CryptoTable.tsx in frontend)
+
+Purpose:
+Provides a flexible way to configure and create HubConnection instances.
+
+Benefits:
+Simplifies the construction process while allowing optional configurations.
+
+7.Strategy Pattern
+Explanation
+The Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable.
+ It allows the algorithm to vary independently from the context that uses the algorithm.
+
+ e.x : Sorting logic in SortingHelper.
+
+-Puspose : Encapsulates different sorting and filtering strategies as separate methods or classes.
+
+-Description:
+
+Sorting logic for different fields (name, price, marketCap, etc.) is encapsulated
+within separate case statements in the SortCryptoData method.
+The generic method "SortBy" encapsulates the common sorting logic.
+
+8.Factory pattern(not unders)
+
+Explanation
+The Factory Method pattern defines an interface for creating an object, 
+allowing subclasses to alter the type of objects that will be created. 
+This provides a way to create instances of a class with a common interface without specifying their concrete types.
+
+e.x : Potentially in CryptoDbContext instantiation by Entity Framework Core.
+
+Purpose:
+Abstracts the creation of DbContext instances.
+
+9. Data Transfer Object (DTO) Pattern
+
+Explanation
+DTO (Data Transfer Object) pattern is a design practice where you create simple classes containing only data (no business logic)
+to transfer information between different layers of an application
+
+
+example
+e.x : CryptoData and CryptoHistoryData models.
+
+Purpose:
+Acts as a contract for data exchanged between layers (e.g., controller to frontend or database to controller).
+
+10 Adapter Pattern
+
+Explanation
+The Abstract Factory pattern provides an interface for creating families of related or dependent objects
+ without specifying their concrete classes.
+ It ensures that created objects are compatible and follow a particular theme.
+
+e.x : MapSymbolToIdAsync acts as a way to adapt symbols to their corresponding CoinGecko IDs.
+
+Purpose:
+Converts data from one format to another to make it compatible with the application's internal models.

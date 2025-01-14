@@ -6,6 +6,8 @@ using CryptoAnalyticsAPI.Repositories;
 using Microsoft.AspNetCore.SignalR;
 using CryptoAnalyticsAPI.Helpers;
 using CryptoAnalyticsAPI.Models;
+using System.Text.Json;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,13 +21,15 @@ namespace CryptoAnalyticsAPI.Controllers
         private readonly IHubContext<CryptoDataHub> _hubContext;
         private readonly HistoricalDataService _historicalDataService;
         private readonly CryptoDataRepository _cryptoDataRepository;
+        private readonly PredictionService _predictionService;
 
-        public CryptoDataController(CoinMarketCapService cryptoService, IHubContext<CryptoDataHub> hubContext, HistoricalDataService historicalDataService, CryptoDataRepository cryptoDataRepository)
+        public CryptoDataController(CoinMarketCapService cryptoService, IHubContext<CryptoDataHub> hubContext, HistoricalDataService historicalDataService, PredictionService predictionService, CryptoDataRepository cryptoDataRepository)
         {
             _cryptoService = cryptoService;
             _hubContext = hubContext;
             _historicalDataService = historicalDataService;
             _cryptoDataRepository = cryptoDataRepository;
+            _predictionService = predictionService;
         }
 
         [HttpGet]
@@ -99,6 +103,52 @@ namespace CryptoAnalyticsAPI.Controllers
 
             return Ok("Historical data saved successfully.");
         }
+
+        [HttpPost("predict")]
+        public async Task<IActionResult> PredictPrice([FromBody] CryptoData cryptoData)
+        {
+            var prediction = await _predictionService.PredictPrice(cryptoData.MarketCap, cryptoData.Volume24h, cryptoData.Price);
+            return Ok(new { PredictedPrice = prediction });
+        }
+        [HttpPost("train-model")]
+        public async Task<IActionResult> TrainModel(string _Name, int days = 30)
+        {
+
+            try
+            {
+                var historicalData = await _historicalDataService.FetchHistoricalDataForPythonAsync(_Name, days);
+
+                var requestData = historicalData.Select(data => new
+                {
+                    Date = data.Date.ToString("yyyy-MM-dd"),
+                    Price = data.Price,
+                    MarketCap = data.MarketCap,
+                    Volume24h = data.Volume24h
+                }).ToList();
+                Console.WriteLine(JsonSerializer.Serialize(requestData)); // Debugging log
+
+                var client = new HttpClient();
+                var json = JsonSerializer.Serialize(requestData); // Serialize requestData to JSON string
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                // Send the POST request
+                var response = await client.PostAsync("http://127.0.0.1:8000/train", content);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMessage = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {response.StatusCode}, Message: {errorMessage}");
+                    throw new Exception($"Failed to call AI service: {response.StatusCode}");
+                }
+
+                return Ok("Model training initiated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
+
+
 
         // POST /api/cryptodata/cache
         [HttpPost("cache")]
