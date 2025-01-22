@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CryptoAnalyticsAPI.Controllers
 {
@@ -33,6 +34,7 @@ namespace CryptoAnalyticsAPI.Controllers
         }
 
         [HttpGet]
+
         public async Task<IActionResult> GetCryptoData(int page = 1, int limit = 250, string sort = "name", string filter = "")
         {
             var cryptoData = await _cryptoService.GetLatestCryptoDataAsync();
@@ -55,6 +57,33 @@ namespace CryptoAnalyticsAPI.Controllers
             return Ok(pagedData);
         }
 
+        [HttpGet("details")]
+        public async Task<IActionResult> GetCryptoDetails(string name){
+            try
+            {
+                // Await the asynchronous method to fetch the cryptocurrency details
+                var currentCrypto = await _cryptoService.GetCryptoDetailsByName(name);
+
+                if (currentCrypto == null)
+                {
+                    return NotFound("Cryptocurrency details not found.");
+                }
+
+                // Return the required fields in the response
+                return Ok(new
+                {
+                    marketCap = currentCrypto.MarketCap,
+                    volume24h = currentCrypto.Volume24h
+                });
+            }
+            catch (Exception ex)
+            {
+                // Return a BadRequest response with the error message
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+        
+      
         // GET /api/cryptodata/history?symbol=BTC&name=Bitcoin
         [HttpGet("history")]
         public async Task<IActionResult> GetHistoricalData(string symbol, int days = 30)
@@ -103,7 +132,7 @@ namespace CryptoAnalyticsAPI.Controllers
 
             return Ok("Historical data saved successfully.");
         }
-
+    
         [HttpPost("predict")]
         public async Task<IActionResult> PredictPrice([FromBody] CryptoData cryptoData)
         {

@@ -1,69 +1,69 @@
-/* Add some padding and a light background */
 .crypto-table-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
-  min-height: 70vh; /* Full page height */
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.container {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Style for the heading */
-  h1 {
-    font-family: "Arial", sans-serif;
-    font-weight: bold;
-    color: #343a40;
-  }
-  
-  /* Table styling */
-  .table {
-    font-size: 0.9rem;
-    border-collapse: collapse;
-  }
-  
-  /* Highlight table rows on hover */
-  .table-hover tbody tr:hover {
-    background-color: #f1f3f5;
-    cursor: pointer;
-  }
-  
-  /* Table header styling */
-  .thead-dark th {
-    background-color: #343a40;
-    color: #ffffff;
-    text-align: center;
-  }
-  
-  /* Center-align the text for numeric columns */
-  .table td:nth-child(3),
-  .table td:nth-child(4),
-  .table td:nth-child(5) {
-    text-align: right;
-  }
-  .table-wrapper {
-    flex-grow: 1;
-  }
-  .crypto-table-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 60vh; /* Adjust this based on the desired page layout */
-  }
-  
-  .table-container {
-    flex-grow: 1;
-    overflow-y: auto; /* Allow scrolling if the table content overflows */
-    min-height: 40vh; /* Ensure the table area has a consistent minimum height */
-  }
-  
-  .pagination-container {
-    margin-top: 10px;
-    text-align: center; /* Center pagination */
-  }
-  
+h1 {
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  color: #007bff;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.crypto-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.crypto-table th, .crypto-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.crypto-table th {
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.crypto-table tr:hover {
+  background: #f1f1f1;
+}
+
+.select-btn {
+  background: #28a745;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-btn {
+  margin: 0 5px;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  background: #007bff;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.page-btn.active {
+  background: #0056b3;
+}

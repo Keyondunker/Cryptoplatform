@@ -1,4 +1,5 @@
 import React from "react";
+import { FaSearch } from "react-icons/fa";
 
 interface SearchBarProps {
   searchTerm: string; // The current search term
@@ -7,14 +8,19 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
   return (
-    <div className="search-bar mb-3">
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Search by name or symbol..."
-        value={searchTerm}
-        onChange={(e) => onSearch(e.target.value)} // Trigger onSearch when input changes
-      />
+    <div className="search-bar-container">
+      <div className="search-bar">
+        <input
+          type="text"
+          className="form-control search-input"
+          placeholder="Search cryptocurrencies by name or symbol..."
+          value={searchTerm}
+          onChange={(e) => onSearch(e.target.value)} // Trigger onSearch when input changes
+        />
+        <button className="search-btn">
+          <FaSearch />
+        </button>
+      </div>
     </div>
   );
 };

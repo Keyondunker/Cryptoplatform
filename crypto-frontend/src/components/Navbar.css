@@ -1,0 +1,46 @@
+.navbar {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .navbar-dark {
+    background-color: #1e1e1e !important;
+  }
+  
+  .navbar-light {
+    background-color: #f8f9fa !important;
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4caf50 !important;
+  }
+  
+  .nav-link {
+    font-size: 1.2rem;
+    padding: 10px 15px;
+  }
+  
+  .nav-link:hover {
+    color: #4caf50 !important;
+  }
+  
+  .btn-outline-primary {
+    border: 2px solid #4caf50;
+    color: #4caf50;
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .btn-danger {
+    background-color: #d9534f;
+    border: none;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c9302c;
+  }
+  

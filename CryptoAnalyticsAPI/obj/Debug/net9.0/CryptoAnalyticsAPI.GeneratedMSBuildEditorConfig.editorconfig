@@ -17,41 +17,41 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CryptoAnalyticsAPI
 build_property.RootNamespace = CryptoAnalyticsAPI
-build_property.ProjectDir = D:\workspace\ASP dot net\Full\CryptoProject\CryptoAnalyticsAPI\
+build_property.ProjectDir = D:\workspace\ASP dot net\Full\Cryptoplatform_clone(JWT)\CryptoAnalyticsAPI\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\workspace\ASP dot net\Full\CryptoProject\CryptoAnalyticsAPI
+build_property.MSBuildProjectDirectory = D:\workspace\ASP dot net\Full\Cryptoplatform_clone(JWT)\CryptoAnalyticsAPI
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/workspace/ASP dot net/Full/CryptoProject/CryptoAnalyticsAPI/Views/Home/Index.cshtml]
+[D:/workspace/ASP dot net/Full/Cryptoplatform_clone(JWT)/CryptoAnalyticsAPI/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/workspace/ASP dot net/Full/CryptoProject/CryptoAnalyticsAPI/Views/Home/Privacy.cshtml]
+[D:/workspace/ASP dot net/Full/Cryptoplatform_clone(JWT)/CryptoAnalyticsAPI/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/workspace/ASP dot net/Full/CryptoProject/CryptoAnalyticsAPI/Views/Shared/Error.cshtml]
+[D:/workspace/ASP dot net/Full/Cryptoplatform_clone(JWT)/CryptoAnalyticsAPI/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/workspace/ASP dot net/Full/CryptoProject/CryptoAnalyticsAPI/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/workspace/ASP dot net/Full/Cryptoplatform_clone(JWT)/CryptoAnalyticsAPI/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/workspace/ASP dot net/Full/CryptoProject/CryptoAnalyticsAPI/Views/_ViewImports.cshtml]
+[D:/workspace/ASP dot net/Full/Cryptoplatform_clone(JWT)/CryptoAnalyticsAPI/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/workspace/ASP dot net/Full/CryptoProject/CryptoAnalyticsAPI/Views/_ViewStart.cshtml]
+[D:/workspace/ASP dot net/Full/Cryptoplatform_clone(JWT)/CryptoAnalyticsAPI/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/workspace/ASP dot net/Full/CryptoProject/CryptoAnalyticsAPI/Views/Shared/_Layout.cshtml]
+[D:/workspace/ASP dot net/Full/Cryptoplatform_clone(JWT)/CryptoAnalyticsAPI/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-7nhaistc83

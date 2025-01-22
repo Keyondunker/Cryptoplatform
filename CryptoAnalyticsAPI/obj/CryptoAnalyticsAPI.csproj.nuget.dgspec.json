@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\workspace\\ASP dot net\\Full\\CryptoProject\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj": {}
+    "D:\\workspace\\ASP dot net\\Full\\Cryptoplatform_clone(JWT)\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj": {}
   },
   "projects": {
-    "D:\\workspace\\ASP dot net\\Full\\CryptoProject\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj": {
+    "D:\\workspace\\ASP dot net\\Full\\Cryptoplatform_clone(JWT)\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\workspace\\ASP dot net\\Full\\CryptoProject\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj",
+        "projectUniqueName": "D:\\workspace\\ASP dot net\\Full\\Cryptoplatform_clone(JWT)\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj",
         "projectName": "CryptoAnalyticsAPI",
-        "projectPath": "D:\\workspace\\ASP dot net\\Full\\CryptoProject\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj",
+        "projectPath": "D:\\workspace\\ASP dot net\\Full\\Cryptoplatform_clone(JWT)\\CryptoAnalyticsAPI\\CryptoAnalyticsAPI.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\workspace\\ASP dot net\\Full\\CryptoProject\\CryptoAnalyticsAPI\\obj\\",
+        "outputPath": "D:\\workspace\\ASP dot net\\Full\\Cryptoplatform_clone(JWT)\\CryptoAnalyticsAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -44,6 +44,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.1, )"
+            },
             "Microsoft.AspNetCore.SignalR": {
               "target": "Package",
               "version": "[1.1.0, )"
@@ -72,6 +76,10 @@
               "target": "Package",
               "version": "[9.0.0, )"
             },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.3.0, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
@@ -83,6 +91,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[7.2.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.3.0, )"
             }
           },
           "imports": [
@@ -104,7 +116,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
