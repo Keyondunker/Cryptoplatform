@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CryptoAnalyticsAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+70c3c0ea672947167a9969b3de6a3e475d1f0757")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc6ccfede568932d9fe9466e725138025bfcdb88")]
 [assembly: System.Reflection.AssemblyProductAttribute("CryptoAnalyticsAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CryptoAnalyticsAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

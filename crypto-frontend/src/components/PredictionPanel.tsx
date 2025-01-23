@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaSyncAlt, FaChartLine, FaExclamationTriangle } from "react-icons/fa";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import "./PredictionPanel.css";
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const PredictionPanel: React.FC = () => {
     const [selectedName, setSelectedName] = useState<string>("");
@@ -9,7 +14,8 @@ const PredictionPanel: React.FC = () => {
     const [price, setPrice] = useState<number | string>("");
     const [marketCap, setMarketCap] = useState<number | null>(null);
     const [volume24h, setVolume24h] = useState<number | null>(null);
-    const [prediction, setPrediction] = useState<string | null>(null);
+    const [days, setDays] = useState<number>(7); // Number of prediction days
+    const [predictions, setPredictions] = useState<{ date: string; predicted_price: number }[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -18,7 +24,7 @@ const PredictionPanel: React.FC = () => {
         setError(null);
         setLoading(true);
         try {
-            const response = await axios.post(`http://localhost:5000/api/cryptodata/train-model?_Name=${selectedName}&days=${trainingDays}`);
+            await axios.post(`http://localhost:5000/api/cryptodata/train-model?_Name=${selectedName}&days=${trainingDays}`);
             alert("Model trained successfully!");
         } catch (err) {
             setError("Failed to train model. Please try again.");
@@ -49,7 +55,7 @@ const PredictionPanel: React.FC = () => {
         }
     };
 
-    // Handles predicting cryptocurrency prices
+    // Handles predicting cryptocurrency prices for multiple days
     const handlePredict = async () => {
         if (!marketCap || !volume24h) {
             setError("Market Cap and Volume data are required.");
@@ -57,21 +63,36 @@ const PredictionPanel: React.FC = () => {
         }
 
         setError(null);
-        setPrediction(null);
+        setPredictions([]);
         setLoading(true);
 
         try {
             const response = await axios.post("http://127.0.0.1:8000/predict", {
-                price: Number(price),
                 market_cap: Number(marketCap),
                 volume_24h: Number(volume24h),
+                days: days,
             });
-            setPrediction(`Predicted Price: $${response.data.prediction.toFixed(2)}`);
+
+            setPredictions(response.data.predictions);
         } catch (err) {
             setError("Failed to fetch prediction. Please try again.");
         } finally {
             setLoading(false);
         }
+    };
+
+    // Chart.js data for visualization
+    const chartData = {
+        labels: predictions.map((p) => p.date),
+        datasets: [
+            {
+                label: "Predicted Price",
+                data: predictions.map((p) => p.predicted_price),
+                borderColor: "rgba(75,192,192,1)",
+                fill: false,
+                tension: 0.4,
+            },
+        ],
     };
 
     return (
@@ -99,6 +120,16 @@ const PredictionPanel: React.FC = () => {
                 />
             </div>
 
+            <div className="form-group">
+                <label>Number of Prediction Days:</label>
+                <input
+                    type="number"
+                    className="form-control"
+                    value={days}
+                    onChange={(e) => setDays(Number(e.target.value))}
+                />
+            </div>
+
             <div className="button-group">
                 <button className="btn btn-primary" onClick={handleTrain} disabled={loading}>
                     {loading ? <FaSyncAlt className="loading-icon" /> : "Train Model"}
@@ -115,22 +146,18 @@ const PredictionPanel: React.FC = () => {
                 </div>
             )}
 
-            <div className="form-group mt-3">
-                <label>Price (Optional for prediction):</label>
-                <input
-                    type="number"
-                    className="form-control"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                />
-            </div>
-
             <button className="btn btn-success mt-3" onClick={handlePredict} disabled={loading}>
                 {loading ? <FaSyncAlt className="loading-icon" /> : "Predict Price"}
             </button>
 
             {error && <div className="alert alert-danger mt-3"><FaExclamationTriangle /> {error}</div>}
-            {prediction && <div className="alert alert-success mt-3"><FaChartLine /> {prediction}</div>}
+
+            {predictions.length > 0 && (
+                <div className="mt-4">
+                    <h3>Predicted Price Chart</h3>
+                    <Line data={chartData} />
+                </div>
+            )}
         </div>
     );
 };

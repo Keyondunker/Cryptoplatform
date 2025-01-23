@@ -30,6 +30,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ symbol }) => {
   const [historicalData, setHistoricalData] = useState<HistoricalData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedMetric, setSelectedMetric] = useState<string>("price");
 
   useEffect(() => {
     const fetchHistoricalData = async () => {
@@ -78,38 +79,36 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ symbol }) => {
     );
   }
 
-  // Prepare chart data
+  // Prepare chart data based on selected metric
   const labels = historicalData.map((data) => data.date);
-  const prices = historicalData.map((data) => data.price);
-  const marketCaps = historicalData.map((data) => data.marketCap);
-  const volumes = historicalData.map((data) => data.volume24h);
+  const dataMap: Record<string, { label: string; data: number[]; color: string }> = {
+    price: {
+      label: `Price (USD)`,
+      data: historicalData.map((data) => data.price),
+      color: "rgba(75, 192, 192, 1)",
+    },
+    marketCap: {
+      label: `Market Cap (USD)`,
+      data: historicalData.map((data) => data.marketCap),
+      color: "rgba(153, 102, 255, 1)",
+    },
+    volume24h: {
+      label: `24h Volume (USD)`,
+      data: historicalData.map((data) => data.volume24h),
+      color: "rgba(255, 159, 64, 1)",
+    },
+  };
 
   const chartData = {
     labels,
     datasets: [
       {
-        label: `Price (USD)`,
-        data: prices,
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        label: dataMap[selectedMetric].label,
+        data: dataMap[selectedMetric].data,
+        borderColor: dataMap[selectedMetric].color,
+        backgroundColor: dataMap[selectedMetric].color.replace("1)", "0.2)"), // Adjust opacity
         borderWidth: 2,
         tension: 0.4, // Smooth curve
-      },
-      {
-        label: `Market Cap (USD)`,
-        data: marketCaps,
-        borderColor: "rgba(153, 102, 255, 1)",
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        borderWidth: 2,
-        tension: 0.4,
-      },
-      {
-        label: `24h Volume (USD)`,
-        data: volumes,
-        borderColor: "rgba(255, 159, 64, 1)",
-        backgroundColor: "rgba(255, 159, 64, 0.2)",
-        borderWidth: 2,
-        tension: 0.4,
       },
     ],
   };
@@ -129,7 +128,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ symbol }) => {
       },
       title: {
         display: true,
-        text: `Historical Data for ${symbol}`,
+        text: `Historical ${dataMap[selectedMetric].label} for ${symbol}`,
         font: {
           size: 18,
           weight: "bold" as const,
@@ -152,6 +151,19 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ symbol }) => {
 
   return (
     <div className="chart-container">
+      <div className="chart-options">
+        <label>Select Metric:</label>
+        <select
+          value={selectedMetric}
+          onChange={(e) => setSelectedMetric(e.target.value)}
+          className="form-select"
+        >
+          <option value="price">Price (USD)</option>
+          <option value="marketCap">Market Cap (USD)</option>
+          <option value="volume24h">24h Volume (USD)</option>
+        </select>
+      </div>
+
       <Line data={chartData} options={options} />
     </div>
   );
