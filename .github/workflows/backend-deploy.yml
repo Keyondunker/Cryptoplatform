@@ -37,6 +37,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Configure Git User
+        run: |
+          git config --global user.email "keyonjelam@gmail.com"
+          git config --global user.name "Keyondunker"
+
   deploy-fastapi-backend:
     runs-on: ubuntu-latest
 
