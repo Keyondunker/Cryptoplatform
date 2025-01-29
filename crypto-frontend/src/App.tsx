@@ -7,6 +7,9 @@ import UserPreference from "./components/UserPreferences";
 import PredictPage from "./components/PredictionPanel";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";  // Import the Navbar component
+import SentimentPage from "./pages/SentimentPage";  // Import SentimentPage
+import AnomalyPage from "./pages/AnomaliesPage";
+import PostDetails from "./components/PostDetails";
 import "./App.css";
 import { getAccessToken, logout } from "./auth/authService";
 
@@ -75,6 +78,9 @@ const App: React.FC = () => {
                 />
                 <Route path="/predict" element={<PredictPage />} />
                 <Route path="/user-preferences" element={<UserPreference />} />
+                <Route path="/sentiment" element={<SentimentPage />} />
+                <Route path="/post/:id" element={<PostDetails />} />
+                <Route path="/anomalies" element={<AnomalyPage />} />
               </Routes>
             </div>
           </>

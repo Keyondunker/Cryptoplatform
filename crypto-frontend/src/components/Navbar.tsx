@@ -30,6 +30,12 @@ const Navbar: React.FC<NavbarProps> = ({ theme, toggleTheme, onLogout }) => {
               <Link className="nav-link" to="/predict">Predict Price</Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link" to="/sentiment">Sentiment</Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/anomalies">Anomaly</Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/user-preferences">User Preferences</Link>
             </li>
           </ul>

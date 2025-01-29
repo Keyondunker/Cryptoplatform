@@ -1,0 +1,14 @@
+
+services:
+  frontend:
+    build: ./crypto-frontend
+    ports:
+      - "3000:3000"
+  backend-dotnet:
+    build: ./CryptoAnalyticsAPI
+    ports:
+      - "5000:5000"
+  backend-fastapi:
+    build: ./CryptoAnalyticsAI
+    ports:
+      - "8000:8000"

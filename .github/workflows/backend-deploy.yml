@@ -1,0 +1,60 @@
+name: Backend Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-dotnet-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 9.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0'
+
+      - name: Build .NET API
+        run: |
+          cd CryptoAnalyticsAPI
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -o published
+
+      - name: Deploy .NET API to GitHub Pages
+        run: |
+          cd CryptoAnalyticsAPI/published
+          touch .nojekyll
+          git init
+          git checkout -b gh-pages
+          git add .
+          git commit -m "Deploy .NET API"
+          git push --force https://${{ secrets.GITHUB_TOKEN }}@github.com/your-username/crypto-analytics-platform.git gh-pages:gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-fastapi-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.13.1
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13.1'
+
+      - name: Install dependencies
+        run: |
+          cd CryptoAnalyticsAI
+          pip install -r requirements.txt
+
+      - name: Start FastAPI server
+        run: |
+          cd CryptoAnalyticsAI
+          nohup uvicorn app:app --host 0.0.0.0 --port 8000 &

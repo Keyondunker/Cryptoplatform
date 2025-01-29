@@ -2,6 +2,8 @@ from fastapi import FastAPI, Request, HTTPException
 from pydantic import BaseModel
 from crypto_model import CryptoModel
 from fastapi.middleware.cors import CORSMiddleware
+from sentiment_analysis import analyze_sentiment
+from anomaly_detection import detect_anomalies
 from typing import List
 import numpy as np
 import pandas as pd
@@ -9,6 +11,7 @@ import logging
 from sklearn.linear_model import LinearRegression  # Import LinearRegression
 import pickle
 import datetime
+from utils.data_fetcher import fetch_crypto_data
 
 class TrainingData(BaseModel):
     Date: str
@@ -36,7 +39,40 @@ class PredictionRequest(BaseModel):
     historical_data: List[dict]
     days: int
 
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to my FastAPI app!"}
 
+@app.get("/items/{item_id}")
+async def read_item(item_id: int, q: str = None):
+    return {"item_id": item_id, "query": q}
+
+@app.get("/fetch_crypto_data")
+async def fetch_and_save_data():
+    try:
+        fetch_crypto_data('bitcoin', 'usd', days=90)
+        return {"message": "Crypto data fetched and saved successfully!"}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/sentiment")
+async def get_sentiment(days: int = 7):
+    """
+    Endpoint to fetch sentiment analysis data for a specified period.
+
+    :param days: Number of days for which sentiment data is required (default: 7 days)
+    :return: JSON response with sentiment analysis results
+    """
+    try:
+        sentiment_results = analyze_sentiment('cryptocurrency', 'Bitcoin', limit=200, days=days)
+        return {"sentiment_analysis": sentiment_results}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/anomalies")
+async def get_anomalies():
+    anomaly_results = detect_anomalies("data/crypto_price_data.csv")
+    return {"anomalies_detected": anomaly_results}
 
 @app.post("/train")
 async def train_model(data: List[TrainingData]):
